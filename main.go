@@ -33,9 +33,13 @@ func main() {
 		fmt.Println("Enter the number of tickets you want to book: ")
 		fmt.Scan(&userTickets)
 
-		if userTickets > int(remainingTickets) {
+		isValidInput := len(userName) > 2 && len(userLastName) > 2 && userTickets > 0
+
+		if userTickets > int(remainingTickets) && isValidInput {
 			fmt.Printf("You are trying to book more tickets than available. We only have %v tickets remaining. Try again.\n", remainingTickets)
-		} else {
+		} else if userTickets <= int(remainingTickets) && !isValidInput {
+			fmt.Println("Invalid user input")
+		}  else {
 			bookings = append(bookings, userName + " " + userLastName)
 			remainingTickets = remainingTickets - uint(userTickets)
 
