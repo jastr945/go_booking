@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 func main() {
 	confName := "Go Conference"
 	const confTickets uint = 60
-	var remainingTickets uint = 50
+	var remainingTickets uint = 60
 
 	// print types
 	fmt.Printf("confName is of type %T, confTickets is of type %T\n", confName, confTickets)
@@ -16,23 +17,37 @@ func main() {
 	fmt.Printf("Get your tickets here! Available tickets: %v; remaining tickets: %v\n", confTickets, remainingTickets)
 
 	// declare a slice as the number of elements is not defined
-	bookings := []string{"user2", "user3"}
+	bookings := []string{"Tom Smith", "Jane Brown"}
 	var userName string
+	var userLastName string
 	var userTickets int
 
 	for {
-		fmt.Println("Enter your name: ")
+		fmt.Println("Enter your first name: ")
 		// user input with a & pointer (memory location)
 		fmt.Scan(&userName)
+
+		fmt.Println("Enter your last name: ")
+		fmt.Scan(&userLastName)
 
 		fmt.Println("Enter the number of tickets you want to book: ")
 		fmt.Scan(&userTickets)
 
-		bookings = append(bookings, userName)
+		bookings = append(bookings, userName + " " + userLastName)
 		remainingTickets = remainingTickets - uint(userTickets)
 
 		fmt.Printf("User %v booked %v ticket(s)\n", userName, userTickets)
 		fmt.Printf("Remaining tickets after booking: %v\n", remainingTickets)
-		fmt.Printf("All bookings: %v; bookings type: %T, slice length: %v\n", bookings, bookings, len(bookings))
+
+		// print bookings with the first name and the first letter of the last name
+		editedBookings := []string{}
+		for _, booking := range bookings {
+			nameSplit := strings.Fields(booking)
+			lastNameFirstLetter := nameSplit[1][:1]
+			nameSplit[1] = lastNameFirstLetter + "."
+			editedBookings = append(editedBookings, nameSplit[0] + " " + nameSplit[1])
+		}
+
+		fmt.Printf("All bookings: %v; bookings type: %T, slice length: %v\n", editedBookings,  editedBookings, len(editedBookings))
 	}
 }
