@@ -22,7 +22,7 @@ func main() {
 	var userLastName string
 	var userTickets int
 
-	for {
+	for remainingTickets > 0 && len(bookings) <= 50 {
 		fmt.Println("Enter your first name: ")
 		// user input with a & pointer (memory location)
 		fmt.Scan(&userName)
@@ -33,21 +33,30 @@ func main() {
 		fmt.Println("Enter the number of tickets you want to book: ")
 		fmt.Scan(&userTickets)
 
-		bookings = append(bookings, userName + " " + userLastName)
-		remainingTickets = remainingTickets - uint(userTickets)
+		if userTickets > int(remainingTickets) {
+			fmt.Printf("You are trying to book more tickets than available. We only have %v tickets remaining. Try again.\n", remainingTickets)
+		} else {
+			bookings = append(bookings, userName + " " + userLastName)
+			remainingTickets = remainingTickets - uint(userTickets)
 
-		fmt.Printf("User %v booked %v ticket(s)\n", userName, userTickets)
-		fmt.Printf("Remaining tickets after booking: %v\n", remainingTickets)
+			fmt.Printf("User %v booked %v ticket(s)\n", userName, userTickets)
+			fmt.Printf("Remaining tickets after booking: %v\n", remainingTickets)
 
-		// print bookings with the first name and the first letter of the last name
-		editedBookings := []string{}
-		for _, booking := range bookings {
-			nameSplit := strings.Fields(booking)
-			lastNameFirstLetter := nameSplit[1][:1]
-			nameSplit[1] = lastNameFirstLetter + "."
-			editedBookings = append(editedBookings, nameSplit[0] + " " + nameSplit[1])
+			// print bookings with the first name and the first letter of the last name
+			editedBookings := []string{}
+			for _, booking := range bookings {
+				nameSplit := strings.Fields(booking)
+				lastNameFirstLetter := nameSplit[1][:1]
+				nameSplit[1] = lastNameFirstLetter + "."
+				editedBookings = append(editedBookings, nameSplit[0] + " " + nameSplit[1])
+			}
+
+			fmt.Printf("All bookings: %v; bookings type: %T, slice length: %v\n", editedBookings,  editedBookings, len(editedBookings))
+
+			if remainingTickets == 0 {
+				fmt.Println("Our event is sold out.")
+				break
+			}
 		}
-
-		fmt.Printf("All bookings: %v; bookings type: %T, slice length: %v\n", editedBookings,  editedBookings, len(editedBookings))
 	}
 }
