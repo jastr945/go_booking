@@ -8,8 +8,13 @@ import (
 const confTickets uint = 60
 var confName string = "Go Conference"
 var remainingTickets uint = 60
-// declare a slice as the number of elements is not defined
-var bookings = []string{"Tom Smith", "Jane Brown"}
+// declare a list of structs, with the initial size of zero
+var bookings = make([]UserInfo, 0)
+
+type UserInfo struct {
+	user string
+	ticketsBooked int
+}
 
 func main() {
 	greetUser()
@@ -17,7 +22,7 @@ func main() {
 		var userName, userLastName, userTickets = getUserInput()
 		var isValidInput = validateInput(userName, userLastName, userTickets, int(remainingTickets))
 		if isValidInput {
-			bookings = bookTickets(userName, userLastName, userTickets)
+			bookTickets(userName, userLastName, userTickets)
 			printBookings()
 			if remainingTickets == 0 {
 				fmt.Println("Our event is sold out.")
@@ -68,23 +73,25 @@ func validateInput(userName string, userLastName string, userTickets int, remain
 	return isValid
 }
 
-func bookTickets(userName string, userLastName string, userTickets int) ([]string) {
-	bookings = append(bookings, userName + " " + userLastName)
+func bookTickets(userName string, userLastName string, userTickets int) {
+	var userData = UserInfo {
+		user: userName + " " + userLastName,
+		ticketsBooked: userTickets,
+	}
+	bookings = append(bookings, userData)
 	remainingTickets = remainingTickets - uint(userTickets)
 
 	fmt.Printf("User %v booked %v ticket(s)\n", userName, userTickets)
 	fmt.Printf("Remaining tickets after booking: %v\n", remainingTickets)
-	return bookings
 }
 
 func printBookings() {
 	// print bookings with the first name and the first letter of the last name
-	editedBookings := []string{}
-	for _, booking := range bookings {
-		nameSplit := strings.Fields(booking)
+	for index, booking := range bookings {
+		nameSplit := strings.Fields(booking.user)
 		lastNameFirstLetter := nameSplit[1][:1]
 		nameSplit[1] = lastNameFirstLetter + "."
-		editedBookings = append(editedBookings, nameSplit[0] + " " + nameSplit[1])
+		bookings[index].user = nameSplit[0] + " " + nameSplit[1]
 	}
-	fmt.Printf("All bookings: %v; bookings type: %T, slice length: %v\n", editedBookings,  editedBookings, len(editedBookings))
+	fmt.Printf("All bookings: %v; bookings type: %T, map length: %v\n", bookings, bookings, len(bookings))
 }
