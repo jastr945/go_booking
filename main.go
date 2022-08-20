@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strings"
+	"time"
 )
 
 const confTickets uint = 60
@@ -23,6 +24,7 @@ func main() {
 		var isValidInput = validateInput(userName, userLastName, userTickets, int(remainingTickets))
 		if isValidInput {
 			bookTickets(userName, userLastName, userTickets)
+			go processEmail(userName)
 			printBookings()
 			if remainingTickets == 0 {
 				fmt.Println("Our event is sold out.")
@@ -94,4 +96,10 @@ func printBookings() {
 		bookings[index].user = nameSplit[0] + " " + nameSplit[1]
 	}
 	fmt.Printf("All bookings: %v; bookings type: %T, map length: %v\n", bookings, bookings, len(bookings))
+}
+
+func processEmail(userName string) {
+	// simulating a longer process
+	time.Sleep(5 * time.Second)
+	fmt.Printf("Email is sent to user %v\n", userName)
 }
